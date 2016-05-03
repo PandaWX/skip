@@ -17,6 +17,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    
+
+    
     return YES;
 }
 
@@ -40,6 +44,31 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+
+//当一个应用程序被其他程序打开的时候会调用这个方法，在该方法中可以实现两个应用程序间的数据局传递
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+
+    NSString *urlStr = [url absoluteString];
+    if ([urlStr hasPrefix:@"myAppTest://"]) {
+        NSLog(@"TestAppDemo1 request params: %@", urlStr);
+        urlStr = [urlStr stringByReplacingOccurrencesOfString:@"myAppTest://" withString:@""];
+        NSArray *paramArray = [urlStr componentsSeparatedByString:@"&"];
+        NSLog(@"paramArray: %@", paramArray);
+        NSMutableDictionary *paramsDic = [[NSMutableDictionary alloc] initWithCapacity:0];
+        for (int i = 0; i < paramArray.count; i++) {
+            NSString *str = paramArray[i];
+            NSArray *keyArray = [str componentsSeparatedByString:@"="];
+            NSString *key = keyArray[0];
+            NSString *value = keyArray[1];
+            [paramsDic setObject:value forKey:key];
+            NSLog(@"key:%@ ==== value:%@", key, value);
+        }
+        
+    }
+    return NO;
+
 }
 
 @end
